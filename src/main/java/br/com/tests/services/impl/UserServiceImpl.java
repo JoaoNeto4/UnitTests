@@ -5,7 +5,11 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.tests.domain.User;
 import br.com.tests.domain.dto.UserDTO;
@@ -42,8 +46,15 @@ public class UserServiceImpl implements UserService{
 
 	private void findByEmail(UserDTO obj) {
 		Optional<User> user = repository.findByEmail(obj.getEmail());
-		if (user.isPresent()) {
+		if (user.isPresent() && !user.get().getId().equals(obj.getId())) {
 			throw new DataIntegratyViolationException("Email já cadastrado");
 		}
 	}
+
+	@Override
+	public User update(UserDTO obj) {
+		findByEmail(obj);
+		return repository.save(mapper.map(obj, User.class));
+	}
+	
 }
