@@ -5,11 +5,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.tests.domain.User;
 import br.com.tests.domain.dto.UserDTO;
@@ -55,6 +51,12 @@ public class UserServiceImpl implements UserService{
 	public User update(UserDTO obj) {
 		findByEmail(obj);
 		return repository.save(mapper.map(obj, User.class));
+	}
+
+	@Override
+	public void delete(Integer id) {
+		findById(id);
+		repository.deleteById(id);
 	}
 	
 }
